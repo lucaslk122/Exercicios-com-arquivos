@@ -7,7 +7,7 @@ def validaIP(ipz):
     return True
 
 def EscreveArquivo(ip_valido,ip_invalido):
-    files = open("Relação_de_ips.txt" , "w")
+    files = open("Exe1_Relação_de_ips" , "w")
     files.write("[ip_valido]\n")
     for i in range(len(ip_valido)):
         files.write(ip_valido[i])
@@ -16,7 +16,7 @@ def EscreveArquivo(ip_valido,ip_invalido):
         files.write(ip_invalido[i])
     files.close()
 
-file = open("IP.txt", "r")
+file = open("Exe1_IP", "r")
 ip = file.readlines()
 file.close()
 ip_valido = []
