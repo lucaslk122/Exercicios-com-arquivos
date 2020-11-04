@@ -15,7 +15,6 @@ def Ocupado(cadaUsuario,total):
 usuarios = []
 total,media = 0,0
 posição = 1
-cadaUsuario = []
 with open("Exe2_usuarios.txt" , "r") as f:
     valor = 0
     for i in f:
