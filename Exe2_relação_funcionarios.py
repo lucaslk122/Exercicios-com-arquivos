@@ -1,41 +1,43 @@
-def ParaMB(TByte):
-    TByte = float(TByte)
-    return (float(TByte/(1024*1024)))
+def abrir_arquivo(file):
+    lista = []
+    with open(file, 'r') as f:
+        data = f.readlines()
+        for item in data:
+            lista.append(item.strip().split())
+    return lista
 
-def Percentual(cadaUsuario,total):
-    percentual = (cadaUsuario[3]/total)*100
-    cadaUsuario.insert((len(cadaUsuario)),percentual)
 
-def Ocupado(cadaUsuario,total):
-    media = 0
-    ele = len(cadaUsuario)
-    media = (total) / (ele + 1)
-    return media
+def conversor(lista):
+    for item in range(len(lista)):
+        tamanho_mbytes = float(lista[item][1]) / (1024 * 1024)
+        lista[item][1] = f'{tamanho_mbytes:.2f}'
 
-usuarios = []
-total,media = 0,0
-posição = 1
-with open("Exe2_usuarios.txt" , "r") as f:
-    valor = 0
-    for i in f:
-        usuarios.append(i.split())
-    for cadaUsuario in f:
-        cadaUsuario.insert(0,posição)
-        valor = ParaMB(float(cadaUsuario[2]))
-        total += valor
-        cadaUsuario.insert((len(cadaUsuario)),valor)
-        posição += 1
-    for cadaUsuario in f:
-        Percentual(cadaUsuario,total)
-media = Ocupado(cadaUsuario,total)
 
-with open("Exe2_relatório_usuarios.txt" , "w") as file:
-    file.write("ACME Inc.               Uso do espaço em disco pelos usuários.\n")
-    file.write("-"*80)
-    file.write("\nNº \tUsuario       \tEspaço utilizado    \t% de uso\n\n") 
-    for cadaUsuario in file:
-        porcentagem = round(cadaUsuario[3,2])
-        file.write(str(cadaUsuario[0]) + "\t" + "{:<15}".format(cadaUsuario[1]) + "\t" + "{:<16}".format(porcentagem) + "MB" + "\t" + "{0:.2f}".format(cadaUsuario[4]) + "%" + "\n")
-    file.write(f"\n Espaço total ocupado: {total}MB")
-    file.write(f"\nEspaço médio ocuoado: {media}MB")
+def espaco_total(lista):
+    total = 0
+    for item in range(len(lista)):
+        total += float(lista[item][1])
+    return total
+
+
+def porcentagem_de_uso(lista, total):
+    for item in range(len(lista)):
+        percentual = (float(lista[item][1]) / total) * 100
+        lista[item].append(f'{percentual:1f}')
+
+
+dados = abrir_arquivo('Exe2_usuarios.txt')
+conversor(dados)
+total = espaco_total(dados)
+porcentagem_de_uso(dados, total)
+
+with open('relatorio-usuarios.txt', 'w') as f:
+    f.write(f'ACME Inc. {" " * 10}   {"Uso do espaço em disco pelos usúarios"}\n')
+    f.write(f'{"-" * 60}\n')
+    f.write(f'NR   Usuario       Espaço utilizado    % do uso\n')
+    for _ in range(len(dados)):
+        f.write(f'{_ + 1}    {dados[_][0]:<10}      {dados[_][1]:^11}         {dados[_][2]:^11}%\n')
+
+    f.write(f'\nEspaço total ocupado: {total} MB\n')
+    f.write(f'Espaço médio ocupado: {total / len(dados):2f} MB')
  
